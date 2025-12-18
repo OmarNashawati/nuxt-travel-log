@@ -1,0 +1,24 @@
+name: Lint
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+    enviroment: build
+    env:
+      NODE_ENV: ${{ secrets.NODE_ENV}}
+      TURSO_DATABASE_URL: ${{ secrets.TURSO_DATABASE_URL}}
+      TURSO_AUTH_TOKEN: ${{ secrets.TURSO_AUTH_TOKEN}}
+    steps:
+      - uses: actions/checkout@v5
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+      - run: npm install
+      - run: npm lint
