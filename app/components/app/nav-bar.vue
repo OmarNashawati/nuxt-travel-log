@@ -1,3 +1,8 @@
+<script setup lang="ts">
+import AuthButton from '../auth-button.vue';
+
+</script>
+
 <template>
   <div class="navbar bg-primary text-primary-content">
     <NuxtLink to="/" class="btn btn-ghost text-xl navbar-start">
@@ -6,9 +11,7 @@
 
     <div class="navbar-end">
       <AppThemeToggle />
-      <a class="btn btn-accent">
-        Sign In 
-      </a>
+      <AuthButton/>
     </div>
   </div>
 </template>
