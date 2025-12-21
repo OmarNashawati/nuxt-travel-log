@@ -4,10 +4,10 @@
 </script>
 
 <template>
-  <div class="flex main-h-secreen flex-col">
+  <div class="flex flex-col min-h-screen ">
     <AppNavBar />
-    <main>
-      <slot />
+    <main class="flex-1 flex flex-col">
+      <slot/>
     </main>
   </div>
 </template>
