@@ -1,10 +1,10 @@
 <script setup lang="ts">
-  const authStore = useAuthStore()
+const authStore = useAuthStore();
 
-  onMounted(() => {
-    authStore.signOut()
-    navigateTo('/')
-  })
+onMounted(() => {
+  authStore.signOut();
+  navigateTo("/");
+});
 </script>
 
 <template>

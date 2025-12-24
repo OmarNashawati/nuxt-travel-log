@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import AuthButton from '../auth-button.vue';
-
+import AuthButton from "../auth-button.vue";
 </script>
 
 <template>
@@ -11,7 +10,7 @@ import AuthButton from '../auth-button.vue';
 
     <div class="navbar-end">
       <AppThemeToggle />
-      <AuthButton/>
+      <AuthButton />
     </div>
   </div>
 </template>

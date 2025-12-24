@@ -1,7 +1,7 @@
 <script setup lang="ts">
-  import { useAuthStore } from '~/stores/auth';
+import { useAuthStore } from "~/stores/auth";
 
-  const authStore = useAuthStore()
+const authStore = useAuthStore();
 </script>
 
 <template>
@@ -20,15 +20,21 @@
     <ul tabindex="-1" class="dropdown-content menu bg-base-200 rounded-box z-1 w-52 p-2 shadow-sm">
       <li>
         <NuxtLink to="/sign-out">
-          <Icon name="tabler:logout-2" size="24"/>
-          Sign Out 
-        </NuxtLink></li>
+          <Icon name="tabler:logout-2" size="24" />
+          Sign Out
+        </NuxtLink>
+      </li>
     </ul>
   </div>
 
-  <button v-else :disabled="authStore.loading" class="btn btn-accent" @click="authStore.signIn">
+  <button
+    v-else
+    :disabled="authStore.loading"
+    class="btn btn-accent"
+    @click="authStore.signIn"
+  >
     Sign In With Github
     <span v-if="authStore.loading" class="loading loading-spinner loading-md" />
-    <Icon v-else name="tabler:brand-github" size="24"/>
+    <Icon v-else name="tabler:brand-github" size="24" />
   </button>
 </template>

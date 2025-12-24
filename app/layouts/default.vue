@@ -1,13 +1,13 @@
 <script setup lang="ts">
-  const authStore = useAuthStore()
-  await authStore.init()
+const authStore = useAuthStore();
+await authStore.init();
 </script>
 
 <template>
   <div class="flex flex-col min-h-screen ">
     <AppNavBar />
     <main class="flex-1 flex flex-col">
-      <slot/>
+      <slot />
     </main>
   </div>
 </template>

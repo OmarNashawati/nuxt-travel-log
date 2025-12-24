@@ -1,39 +1,40 @@
-<script lang="ts" setup>  
-  const props = defineProps<{
-    label: string;
-    icon: string;
-    href: string;
-    showLabel: boolean;
-  }>()
+<script lang="ts" setup>
+const props = defineProps<{
+  label: string;
+  icon: string;
+  href: string;
+  showLabel: boolean;
+}>();
 
-  const route = useRoute()
-
+const route = useRoute();
 </script>
 
 <template>
   <div class="tooltip tooltip-right" :data-tip="props.showLabel ? undefined : props.label">
-  <NuxtLink :to="props.href" :class="{'bg-base-200': route.path === props.href, 'justify-center':!props.showLabel, 'justify-start':props.showLabel}" class="flex flex-nowrap gap-2 p-2 hover:bg-base-300 hover:cursor-pointer ">
-    <Icon :name="props.icon" size="24"/>
-    <Transition name="grow">
-      <p v-if="props.showLabel"> {{ props.label }} </p>
-    </Transition>
-  </NuxtLink>
-</div>
+    <NuxtLink :to="props.href" :class="{ 'bg-base-200': route.path === props.href, 'justify-center': !props.showLabel, 'justify-start': props.showLabel }" class="flex flex-nowrap gap-2 p-2 hover:bg-base-300 hover:cursor-pointer ">
+      <Icon :name="props.icon" size="24" />
+      <Transition name="grow">
+        <p v-if="props.showLabel">
+          {{ props.label }}
+        </p>
+      </Transition>
+    </NuxtLink>
+  </div>
 </template>
 
 <style scoped>
   .grow-enter-active {
-    animation: grow 0.1s;
+  animation: grow 0.1s;
+}
+.grow-leave-active {
+  animation: grow 0.1s reverse;
+}
+@keyframes grow {
+  0% {
+    transform: scale(0);
   }
-  .grow-leave-active {
-    animation: grow 0.1s reverse;
+  100% {
+    transform: scale(1);
   }
-  @keyframes grow {
-    0% {
-      transform: scale(0);
-    }
-    100% {
-      transform: scale(1);
-    }
-  }
+}
 </style>
