@@ -54,7 +54,7 @@ onBeforeRouteLeave(() => {
     </div>
 
     <div v-if="submitError" role="alert" class="alert alert-error">
-      <Icon name="tabler:info-triangle"/>
+      <Icon name="tabler:info-triangle" size="24"/>
       <span>{{ submitError }}</span>
     </div>
 
