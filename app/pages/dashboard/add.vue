@@ -30,7 +30,8 @@ const onSubmit = handleSubmit(async (values) => {
   } catch (e) {
     const error = e as FetchError;
     if(error.data?.data) setErrors(error.data?.data)
-    submitError.value = error.statusMessage || 'An nukown error occured.'
+
+    submitError.value = error.data?.statusMessage || error.statusMessage || 'An nukown error occured.'
   }
   loading.value = false
 });
