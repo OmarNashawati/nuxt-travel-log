@@ -1,3 +1,4 @@
+/* eslint-disable ts/consistent-type-definitions */
 import type { UserWithId } from "./auth";
 
 declare module 'h3' {
@@ -5,3 +6,13 @@ declare module 'h3' {
     user?: UserWithId;
   }
 }
+
+export type LatLongItem = {
+  lat: number;
+  long: number;
+}
+
+export type MapPoint = {
+  id: number;
+  label: string;
+} & LatLongItem

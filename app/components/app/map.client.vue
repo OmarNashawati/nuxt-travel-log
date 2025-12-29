@@ -1,7 +1,9 @@
 <script lang="ts" setup>
   import { CENTER_DAMASCUS } from '~/lib/constants';
 
-const colorMode = useColorMode();
+const colorMode = useColorMode()
+const mapStore = useMapStore()
+
 const style = computed(() => 
   colorMode.value === 'dark' 
   ? "/styles/dark.json" 
@@ -10,14 +12,33 @@ const style = computed(() =>
 
 const center = CENTER_DAMASCUS;
 const zoom = 4;
+
+onMounted(() => {
+  mapStore.init()
+})
 </script>
 
 <template>
     <MglMap
       :map-style="style"
       :zoom="zoom"
-      :center="center as [number, number]"
+      :center="center"
     >
       <MglNavigationControl />
+      <MglMarker
+        v-for="point in mapStore.mapPoints" 
+        :key="point.id" 
+        :coordinates="[point.long, point.lat]"
+      >
+        <template #marker>
+          <div class="tooltip tooltip-top" :data-tip="point.label">
+            <Icon 
+            name="tabler:map-pin-filled" 
+            size="30" 
+            class="text-primary"/>
+          </div>
+        </template>
+      </MglMarker>
+      
   </MglMap>
 </template>
