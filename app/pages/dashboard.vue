@@ -3,6 +3,7 @@ const isSidebarOpen = ref(true);
 const route = useRoute()
 const sidebarStore = useSidebarStore()
 const locationStore = useLocationStore()
+const mapStore = useMapStore()
 
 
 onMounted(() => {
@@ -51,13 +52,15 @@ function toggleSidebar() {
         </div>
         <div v-if="!sidebarStore.loading && sidebarStore.sidebarItems.length" class="flex flex-col">
           <SidebarButton 
-  
             v-for="item in sidebarStore.sidebarItems"
             :key="item.id"
             :show-label="isSidebarOpen"
             :label="item.label"
             :icon="item.icon"
             :href="item.href"
+            :icon-color="item.location?.id === mapStore.selectedPoint?.id ? 'text-accent' : undefined"
+            @mouseenter="mapStore.selectedPoint = item.location ?? null"  
+            @mouseleave="mapStore.selectedPoint = null"  
           />
         </div>
 

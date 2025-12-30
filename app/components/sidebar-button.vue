@@ -2,6 +2,7 @@
 const props = defineProps<{
   label: string;
   icon: string;
+  iconColor?: 'text-accent' | 'text-primary' | 'text-secondary';
   href: string;
   showLabel: boolean;
 }>();
@@ -12,7 +13,7 @@ const route = useRoute();
 <template>
   <div class="tooltip tooltip-right" :data-tip="props.showLabel ? undefined : props.label">
     <NuxtLink :to="props.href" :class="{ 'bg-base-200': route.path === props.href, 'justify-center': !props.showLabel, 'justify-start': props.showLabel }" class="flex flex-nowrap gap-2 p-2 hover:bg-base-300 hover:cursor-pointer ">
-      <Icon :name="props.icon" size="24" />
+      <Icon :name="props.icon" size="24" :class="props.iconColor" />
       <Transition name="grow">
         <p v-if="props.showLabel">
           {{ props.label }}
