@@ -1,4 +1,7 @@
 /* eslint-disable ts/consistent-type-definitions */
+import type { Map, MapEventType } from "maplibre-gl";
+import type { ComponentInternalInstance, Raw } from "vue";
+
 import type { UserWithId } from "./auth";
 
 declare module 'h3' {
@@ -17,3 +20,11 @@ export type MapPoint = {
   name: string;
   description: string | null;
 } & LatLongItem
+
+
+export interface MglEvent<T extends keyof MapEventType> {
+  type: string;
+  component: Raw<ComponentInternalInstance>;
+  map: Map;
+  event: MapEventType[T];
+}

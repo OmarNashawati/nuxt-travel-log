@@ -1,18 +1,29 @@
 <script lang="ts" setup>
-import type {FetchError} from 'ofetch';
+  
+  import type {FetchError} from 'ofetch';
+  
+  import { toTypedSchema } from "@vee-validate/zod";
 
-import { toTypedSchema } from "@vee-validate/zod";
+  import { CENTER_MAKKAH } from '~/lib/constants';
+  import { InsertLocation } from "~/lib/db/schema";
 
-import { InsertLocation } from "~/lib/db/schema";
 
 const { $csrfFetch } = useNuxtApp()
 const router = useRouter()
+const mapStore = useMapStore()
+
 const submitError = ref("");
 const loading = ref(false);
 const submitted = ref(false);
 
-const { handleSubmit, errors ,meta , setErrors} = useForm({
+const { handleSubmit, errors ,meta , setErrors , setFieldValue, controlledValues} = useForm({
   validationSchema: toTypedSchema(InsertLocation),
+  initialValues : {
+    name: "",
+    description: "",
+    lat: (CENTER_MAKKAH as [number, number])[0],
+    long: (CENTER_MAKKAH as [number, number])[1],
+  }
 });
 
 const onSubmit = handleSubmit(async (values) => {
@@ -36,17 +47,43 @@ const onSubmit = handleSubmit(async (values) => {
   loading.value = false
 });
 
+function formatNumber(value?: number) {
+  if(!value) return 0
+  return value.toFixed(5)
+}
+
+effect(() => {
+  if(mapStore.addedPoint) {
+    setFieldValue('long', mapStore.addedPoint.long)
+    setFieldValue('lat', mapStore.addedPoint.lat)
+  }
+})
+
+onMounted(() => {
+  mapStore.addedPoint = {
+    id: 1,
+    name: 'Added Point',
+    description: '',
+    lat: (CENTER_MAKKAH as [number, number])[0],
+    long: (CENTER_MAKKAH as [number, number])[1],
+  }
+})
+
 onBeforeRouteLeave(() => {
   if(!submitted.value && meta.value.dirty) {
     // eslint-disable-next-line no-alert
     const confirm = window.confirm("Are you sure you want to leave? All unsaved changes will be lose.")
-    return confirm;
+    if(!confirm) {
+      return false
+    }
   }
+  mapStore.addedPoint = null
+  return true;
 })
 </script>
 
 <template>
-  <div class="container max-w-md mx-auto">
+  <div class="container max-w-md mx-auto p-4">
     <div class="my-4">
       <h1>Add Location</h1>
       <p class="text-sm">
@@ -67,6 +104,7 @@ onBeforeRouteLeave(() => {
         :disabled="loading"
         :error="errors.name"
         />
+
         <AppFormField
         label="Description"
         name="description"
@@ -74,20 +112,20 @@ onBeforeRouteLeave(() => {
         :disabled="loading"
         :error="errors.description"
         />
-        <AppFormField
-        label="Latitude"
-        name="lat"
-        type="number"
-        :disabled="loading"
-        :error="errors.lat"
-        />
-        <AppFormField
-        label="Longitude"
-        name="long"
-        type="number"
-        :disabled="loading"
-        :error="errors.long"
-      />
+        
+        <p>
+          Drag the <Icon name="tabler:map-pin-filled" class="text-warning" /> marker to your desired location.
+        </p>
+
+        <p>
+          Or double click on the map <Icon name="tabler:map" class="text-warning" />.
+        </p>
+
+
+        
+        <p class="text-xs text-gray-500">
+          Current Location: {{ formatNumber(controlledValues.lat) }}, {{ formatNumber(controlledValues.long) }}
+        </p>
 
       <div class="flex justify-end gap-2">
         <button 

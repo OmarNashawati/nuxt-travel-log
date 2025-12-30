@@ -1,5 +1,9 @@
 <script lang="ts" setup>
-  import { CENTER_DAMASCUS } from '~/lib/constants';
+import type { LngLat } from 'maplibre-gl';
+
+import type { MglEvent } from '~/lib/types';
+
+import { CENTER_DAMASCUS, CENTER_MAKKAH } from '~/lib/constants';
 
 const colorMode = useColorMode()
 const mapStore = useMapStore()
@@ -13,6 +17,20 @@ const style = computed(() =>
 const center = CENTER_DAMASCUS;
 const zoom = 4;
 
+function updateAddedPoint(location: LngLat) {
+  if(mapStore.addedPoint) {
+    mapStore.addedPoint.lat = location.lat
+    mapStore.addedPoint.long = location.lng
+  }
+}
+
+function onDoubleClick (event: MglEvent<"dblclick">) {
+  if(mapStore.addedPoint){
+    mapStore.addedPoint.lat = event.event.lngLat.lat
+    mapStore.addedPoint.long = event.event.lngLat.lng
+  }
+}
+
 onMounted(() => {
   mapStore.init()
 })
@@ -23,8 +41,29 @@ onMounted(() => {
       :map-style="style"
       :zoom="zoom"
       :center="center"
+      @map:dblclick="onDoubleClick"
     >
       <MglNavigationControl />
+
+      <MglMarker
+        v-if="mapStore.addedPoint"
+        draggable
+        :coordinates="[mapStore.addedPoint.long, mapStore.addedPoint.lat]"
+        @update:coordinates="updateAddedPoint"
+      >
+        <template #marker>
+          <div 
+            class="tooltip tooltip-top tooltip-open hover:cursor-pointer"
+            data-tip="Drag to your desired location" 
+          >
+            <Icon 
+            name="tabler:map-pin-filled" 
+            size="30"
+            class="text-warning"/>
+          </div>
+        </template>
+      </MglMarker>
+
       <MglMarker
         v-for="point in mapStore.mapPoints" 
         :key="point.id" 
