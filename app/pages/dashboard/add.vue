@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-  
   import type {FetchError} from 'ofetch';
   
   import { toTypedSchema } from "@vee-validate/zod";
+  import getFetchErrorMessage from '~~/utils/get-fetch-error-message'
+
+  import type { NominatimResult } from '~/lib/types';
 
   import { CENTER_MAKKAH } from '~/lib/constants';
   import { InsertLocation } from "~/lib/db/schema";
@@ -42,7 +44,7 @@ const onSubmit = handleSubmit(async (values) => {
     const error = e as FetchError;
     if(error.data?.data) setErrors(error.data?.data)
 
-    submitError.value = error.data?.statusMessage || error.statusMessage || 'An nukown error occured.'
+    submitError.value = getFetchErrorMessage(error)
   }
   loading.value = false
 });
@@ -50,6 +52,19 @@ const onSubmit = handleSubmit(async (values) => {
 function formatNumber(value?: number) {
   if(!value) return 0
   return value.toFixed(5)
+}
+
+
+function searchResultSelected (result: NominatimResult) {
+  setFieldValue('name', result.name)
+  mapStore.addedPoint = {
+    id: 1,
+    name: 'Added Point',
+    description: '',
+    lat: Number(result.lat),
+    long: Number(result.lon),
+    centerMap: true,
+  }
 }
 
 effect(() => {
@@ -112,21 +127,28 @@ onBeforeRouteLeave(() => {
         :disabled="loading"
         :error="errors.description"
         />
-        
-        <p>
-          Drag the <Icon name="tabler:map-pin-filled" class="text-warning" /> marker to your desired location.
-        </p>
 
-        <p>
-          Or double click on the map <Icon name="tabler:map" class="text-warning" />.
-        </p>
-
-
-        
         <p class="text-xs text-gray-500">
-          Current Location: {{ formatNumber(controlledValues.lat) }}, {{ formatNumber(controlledValues.long) }}
+          Current coordinates: {{ formatNumber(controlledValues.lat) }}, {{ formatNumber(controlledValues.long) }}
         </p>
 
+        <p>To set the coordinates:</p>
+        <ul class="list-disc ml-4 text-sm">
+          <li>
+              Drag the <Icon name="tabler:map-pin-filled" class="text-warning" /> marker on the map <Icon name="tabler:map" class="text-warning" />.
+          </li>
+          <li>
+              Double click on the map <Icon name="tabler:map" class="text-warning" />.
+          </li>
+          <li>
+              Search for location below.
+          </li>
+        </ul>
+        
+
+
+        
+        
       <div class="flex justify-end gap-2">
         <button 
           :disabled="loading" 
@@ -145,5 +167,9 @@ onBeforeRouteLeave(() => {
         </button>
       </div>
     </form>
+
+    <div class="divider"></div>
+
+    <AppPlaceSearch @result-selected="searchResultSelected"/>
   </div>
 </template>
