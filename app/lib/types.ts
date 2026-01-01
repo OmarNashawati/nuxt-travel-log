@@ -1,6 +1,7 @@
 /* eslint-disable ts/consistent-type-definitions */
 import type { Map, MapEventType } from "maplibre-gl";
 import type { ComponentInternalInstance, Raw } from "vue";
+import type { RouteLocationRaw } from "vue-router";
 
 import type { UserWithId } from "./auth";
 
@@ -19,6 +20,8 @@ export type MapPoint = {
   id: number;
   name: string;
   description: string | null;
+  to?: RouteLocationRaw;
+  toLabel?: string;
 } & LatLongItem
 
 

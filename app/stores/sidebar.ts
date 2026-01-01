@@ -1,3 +1,5 @@
+import type { RouteLocationRaw } from "vue-router";
+
 import type { MapPoint } from "~/lib/types";
 
 // eslint-disable-next-line ts/consistent-type-definitions
@@ -5,8 +7,9 @@ export type SidebarItem = {
   id: string;
   label: string;
   icon:string;
-  href: string;
-  location?: MapPoint | null ;
+  href?: string;
+  to?: RouteLocationRaw;
+  mapPoint?: MapPoint | null ;
 }
 
 export const useSidebarStore = defineStore("useSidebarStore", () => {

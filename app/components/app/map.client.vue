@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { LngLat } from 'maplibre-gl';
 
+import { isPointSelected } from '~~/utils/map-points';
+  
 import type { MglEvent } from '~/lib/types';
 
 import { CENTER_DAMASCUS, CENTER_MAKKAH } from '~/lib/constants';
@@ -74,7 +76,7 @@ onMounted(() => {
           <div 
             class="tooltip tooltip-top hover:cursor-pointer" 
             :class="{
-              'tooltip-open': mapStore.selectedPoint === point
+              'tooltip-open':isPointSelected(point, mapStore.selectedPoint)
             }"
             :data-tip="point.name"
             @mouseenter="mapStore.selectPointWithoutFlyTo(point)"  
@@ -83,14 +85,19 @@ onMounted(() => {
             <Icon 
             name="tabler:map-pin-filled" 
             size="30"
-            :class="mapStore.selectedPoint?.id === point.id ?  'text-accent' : 'text-primary'"/>
+            :class="isPointSelected(point, mapStore.selectedPoint) ?  'text-accent' : 'text-primary'"/>
           </div>
         </template>
 
         <mgl-popup>
           <h3 class="text-xl">{{ point.name }}</h3>
-           <p v-if="point.description" class="">{{ point.description }}</p>
-      </mgl-popup>
+          <p v-if="point.description" class="">{{ point.description }}</p>
+          <div class="flex justify-end mt-2">
+            <NuxtLink v-if="point.to" :to="point.to" class="btn btn-sm btn-outline">
+              {{ point.toLabel }}
+            </NuxtLink>
+          </div>
+        </mgl-popup>
       </MglMarker>
       
   </MglMap>
