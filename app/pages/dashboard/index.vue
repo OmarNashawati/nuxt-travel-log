@@ -3,10 +3,10 @@ import { createMapPointFromLocation, isPointSelected } from '~~/utils/map-points
 
   const locationStore = useLocationStore()
   const mapStore = useMapStore()
-  const {locations, status} = storeToRefs(locationStore)
+  const {locations, locationStatus: status} = storeToRefs(locationStore)
 
   onMounted(() => {
-    locationStore.refresh();
+    locationStore.refreshLocation();
   })
 </script>
 

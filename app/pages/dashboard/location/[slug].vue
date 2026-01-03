@@ -1,19 +1,16 @@
 <script setup lang="ts">
-import { createMapPointFromLocation } from '~~/utils/map-points'
 
-  const route = useRoute()
-  const mapStore = useMapStore()
+  const locationStore = useLocationStore()
+  const {
+    currentLocation: location , 
+    currentLocationError: error, 
+    currentLocationStatus: status
+  } = storeToRefs(locationStore)
 
-  const {slug } = route.params
-  const {data: location, status, error} = await useFetch(`/api/locations/${slug}`, {
-    lazy: true,
+  onMounted(() => {
+    locationStore.refreshCurrentLocation()
   })
 
-  effect(() => {
-    if(location.value) {
-      mapStore.mapPoints = [location.value]
-    }
-  })
 </script>
 
 <template>
@@ -27,7 +24,7 @@ import { createMapPointFromLocation } from '~~/utils/map-points'
       </h2>
       <p>{{ location.description }}</p>
 
-      <div v-if="!location.locationLog.length " class="mt-4">
+      <div v-if="!location.locationLogs " class="mt-4">
         <p class="italic ">
           Add a location log to get started.
         </p>
